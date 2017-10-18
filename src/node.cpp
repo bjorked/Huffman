@@ -1,6 +1,6 @@
 #include "node.hpp"
 
-bool compareNodes(const Node &lhs, const Node &rhs)
+bool operator< (const Node &lhs, const Node &rhs)
 {
     return lhs.frequency < rhs.frequency;
 }

@@ -12,4 +12,4 @@ struct Node
 
 #endif
 
-bool compareNodes(const Node&, const Node&);
+bool operator< (const Node&, const Node&);

@@ -2,6 +2,7 @@
 #define ENCODER_HPP
 
 #include <map>
+#include <queue>
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -19,8 +20,11 @@ private:
 
     void findFrequency(void);
 
+    void createNodes(void);
+
     std::ifstream inputFile;
     std::map<char, int> frequencyTable;
+    std::priority_queue<Node> nodeQueue;
 };
 
 #endif
