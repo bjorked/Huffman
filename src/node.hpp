@@ -7,8 +7,8 @@ struct Node
 {
     char character;
     int frequency;
-    Node* left;
-    Node* right;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
 };
 
 struct NodePtrComparison
