@@ -9,6 +9,9 @@ void Encoder::Encode(const std::string& fileName)
     findFrequency();
     closeFile();
     createNodes();
+    buildTree();
+
+    std::shared_ptr<Node> asd = nodeQueue.top();
 }
 
 void Encoder::readyFile(const std::string &fileName)
@@ -37,5 +40,23 @@ void Encoder::createNodes(void)
         node->left = nullptr;
         node->right = nullptr;
         nodeQueue.push(node);
+    }
+}
+
+void Encoder::buildTree(void)
+{
+    while (nodeQueue.size() > 1) {
+        std::shared_ptr<Node> first = nodeQueue.top();
+        nodeQueue.pop();
+        std::shared_ptr<Node> second = nodeQueue.top();
+        nodeQueue.pop();
+
+        std::shared_ptr<Node> newNode(new Node);
+        newNode->character = '\0';
+        newNode->frequency = first->frequency + second->frequency;
+        newNode->left = first;
+        newNode->right = second;
+
+        nodeQueue.push(newNode);
     }
 }
