@@ -31,7 +31,11 @@ void Encoder::findFrequency(void)
 void Encoder::createNodes(void)
 {
     for (const auto& pair : frequencyTable) {
-        Node node = {pair.first, pair.second, nullptr, nullptr};
+        std::shared_ptr<Node> node(new Node);
+        node->character = pair.first;
+        node->frequency = pair.second;
+        node->left = nullptr;
+        node->right = nullptr;
         nodeQueue.push(node);
     }
 }

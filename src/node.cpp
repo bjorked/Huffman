@@ -1,6 +1,6 @@
 #include "node.hpp"
 
-bool operator< (const Node &lhs, const Node &rhs)
+bool NodePtrComparison::operator () (const std::shared_ptr<Node> lhs, const std::shared_ptr<Node> rhs) const
 {
-    return lhs.frequency > rhs.frequency;
+    return lhs->frequency > rhs->frequency;
 }

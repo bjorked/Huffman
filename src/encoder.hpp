@@ -21,10 +21,11 @@ private:
     void findFrequency(void);
 
     void createNodes(void);
+    void buildTree(void);
 
     std::ifstream inputFile;
     std::map<char, int> frequencyTable;
-    std::priority_queue<Node> nodeQueue;
+    std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, NodePtrComparison> nodeQueue;
 };
 
 #endif
