@@ -10,6 +10,7 @@ void Encoder::Encode(const std::string& fileName)
     closeFile();
     createNodes();
     buildTree();
+    createCodeTable(*(nodeQueue.top()), "");
 
     std::shared_ptr<Node> asd = nodeQueue.top();
 }
@@ -59,4 +60,20 @@ void Encoder::buildTree(void)
 
         nodeQueue.push(newNode);
     }
+}
+
+void Encoder::createCodeTable(const Node& node, const std::string &code)
+{
+    if (node.character == '\0') {
+        createCodeTable(*(node.left), code + '0');
+        createCodeTable(*(node.right), code + '1');
+    } else {
+        codeTable[node.character] = code;
+    }
+}
+
+void Encoder::printCodeTable(void) const
+{
+    for (const auto& pair : codeTable)
+        std::cout << pair.first << ' ' << pair.second << std::endl;
 }
