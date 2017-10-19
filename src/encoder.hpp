@@ -15,8 +15,9 @@ public:
 
     void Encode(const std::string& fileName);
 private:
-    void readyFile(const std::string& fileName);
-    void closeFile(void);
+    void readyInputFile(const std::string& fileName);
+    void resetInputFile(void);
+    void readyOutputFile(void);
 
     void findFrequency(void);
 
@@ -25,7 +26,10 @@ private:
 
     void createCodeTable(const Node &node, const std::string& code);
 
+    void writeOutput(void);
+
     std::ifstream inputFile;
+    std::ofstream outputFile;
     std::map<char, int> frequencyTable;
     std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, NodePtrComparison> nodeQueue;
     std::map<char, std::string> codeTable;

@@ -5,24 +5,27 @@ Encoder::Encoder()
 
 void Encoder::Encode(const std::string& fileName)
 {
-    readyFile(fileName);
+    readyInputFile(fileName);
     findFrequency();
-    closeFile();
     createNodes();
     buildTree();
     createCodeTable(*(nodeQueue.top()), "");
-
-    std::shared_ptr<Node> asd = nodeQueue.top();
 }
 
-void Encoder::readyFile(const std::string &fileName)
+void Encoder::readyInputFile(const std::string &fileName)
 {
     inputFile.open(fileName);
 }
 
-void Encoder::closeFile(void)
+void Encoder::resetInputFile(void)
 {
-    inputFile.close();
+    inputFile.clear();
+    inputFile.seekg(0, inputFile.beg);
+}
+
+void Encoder::readyOutputFile(void)
+{
+    outputFile.open("output.bin", std::ios::binary | std::ios::out);
 }
 
 void Encoder::findFrequency(void)
@@ -70,10 +73,4 @@ void Encoder::createCodeTable(const Node& node, const std::string &code)
     } else {
         codeTable[node.character] = code;
     }
-}
-
-void Encoder::printCodeTable(void) const
-{
-    for (const auto& pair : codeTable)
-        std::cout << pair.first << ' ' << pair.second << std::endl;
 }
