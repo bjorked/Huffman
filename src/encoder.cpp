@@ -10,6 +10,7 @@ void Encoder::Encode(const std::string& fileName)
     createNodes();
     buildTree();
     createCodeTable(*(nodeQueue.top()), "");
+    writeOutput();
 }
 
 void Encoder::readyInputFile(const std::string &fileName)
@@ -73,4 +74,18 @@ void Encoder::createCodeTable(const Node& node, const std::string &code)
     } else {
         codeTable[node.character] = code;
     }
+}
+
+void Encoder::writeOutput(void)
+{
+    resetInputFile();
+    readyOutputFile();
+
+    char character;
+    while (inputFile.get(character)) {
+        outputFile << codeTable[character];
+    }
+
+    inputFile.close();
+    outputFile.close();
 }
