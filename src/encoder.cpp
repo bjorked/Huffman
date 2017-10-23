@@ -1,4 +1,5 @@
 #include "encoder.hpp"
+#include <bitset>
 
 Encoder::Encoder()
 {}
@@ -82,8 +83,29 @@ void Encoder::writeOutput(void)
     readyOutputFile();
 
     char character;
+    int packageLength = 0;
+    std::bitset<8> code;
+
     while (inputFile.get(character)) {
-        outputFile << codeTable[character];
+        std::string codeStr = codeTable[character];
+
+        for (const char& letter : codeStr) {
+            if (letter == '0') {
+                code.set(0, 0);
+                packageLength++;
+            } else if (letter == '1') {
+                code.set(0, 1);
+                packageLength++;
+            }
+            if (packageLength == 8) {
+                unsigned long packageLong = code.to_ulong();
+                unsigned char package = static_cast<unsigned char>(packageLong);
+                outputFile << package;
+                packageLength = 0;
+            } else {
+                code <<= 1;
+            }
+        }
     }
 
     inputFile.close();
