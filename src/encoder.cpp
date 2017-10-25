@@ -4,7 +4,7 @@
 Encoder::Encoder()
 {}
 
-void Encoder::Encode(const std::string& fileName)
+void Encoder::encode(const std::string& fileName)
 {
     readyInputFile(fileName);
     findSymbolFrequency();
@@ -14,9 +14,21 @@ void Encoder::Encode(const std::string& fileName)
     writeCompressedOutput();
 }
 
+int Encoder::getInputSize(void) const
+{
+    return inputSize;
+}
+
+int Encoder::getOutputSize(void) const
+{
+    return outputSize;
+}
+
 void Encoder::readyInputFile(const std::string &fileName)
 {
-    inputFile.open(fileName);
+    inputFile.open(fileName, std::ifstream::ate);
+    inputSize = inputFile.tellg();
+    resetInputFile();
 }
 
 // Have to read the input file twice
@@ -129,6 +141,8 @@ void Encoder::writeCompressedOutput(void)
             }
         }
     }
+
+    outputSize = outputFile.tellp();
 
     inputFile.close();
     outputFile.close();

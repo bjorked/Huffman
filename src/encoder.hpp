@@ -13,7 +13,10 @@ class Encoder
 public:
     Encoder();
 
-    void Encode(const std::string& fileName);
+    void encode(const std::string& fileName);
+
+    int getInputSize(void) const;
+    int getOutputSize(void) const;
 private:
     void readyInputFile(const std::string& fileName);
     void resetInputFile(void);
@@ -31,6 +34,9 @@ private:
     std::map<char, int> frequencyTable;
     std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, NodePtrComparison> nodeQueue;
     std::map<char, std::string> codeTable;
+
+    int inputSize;
+    int outputSize;
 };
 
 #endif
