@@ -7,11 +7,11 @@ Encoder::Encoder()
 void Encoder::Encode(const std::string& fileName)
 {
     readyInputFile(fileName);
-    findFrequency();
+    findSymbolFrequency();
     createNodes();
-    buildTree();
+    buildHuffmanTree();
     createCodeTable(*(nodeQueue.top()), "");
-    writeOutput();
+    writeCompressedOutput();
 }
 
 void Encoder::readyInputFile(const std::string &fileName)
@@ -19,6 +19,7 @@ void Encoder::readyInputFile(const std::string &fileName)
     inputFile.open(fileName);
 }
 
+// Have to read the input file twice
 void Encoder::resetInputFile(void)
 {
     inputFile.clear();
@@ -30,13 +31,14 @@ void Encoder::readyOutputFile(void)
     outputFile.open("output.bin", std::ios::binary | std::ios::out);
 }
 
-void Encoder::findFrequency(void)
+void Encoder::findSymbolFrequency(void)
 {
     char character;
     while (inputFile.get(character))
         ++frequencyTable[character];
 }
 
+// Create a leaf node for each symbol and add it to the priority queue
 void Encoder::createNodes(void)
 {
     for (const auto& pair : frequencyTable) {
@@ -49,7 +51,15 @@ void Encoder::createNodes(void)
     }
 }
 
-void Encoder::buildTree(void)
+/*
+ * While there is more than one node in the queue:
+ * 		1. Remove the two nodes of highest priority from the queue
+ * 		2. Create a new node with these two nodes as children and with
+ * 		frequency equal to the sum of the two nodes' frequencies
+ * 		3. Add the new node to the queue
+ * The remaining node is the root node and the tree is complete
+*/
+void Encoder::buildHuffmanTree(void)
 {
     while (nodeQueue.size() > 1) {
         std::shared_ptr<Node> first = nodeQueue.top();
@@ -58,7 +68,7 @@ void Encoder::buildTree(void)
         nodeQueue.pop();
 
         std::shared_ptr<Node> newNode(new Node);
-        newNode->character = '\0';
+        newNode->character = '\0';			// Represents a non-leaf node
         newNode->frequency = first->frequency + second->frequency;
         newNode->left = first;
         newNode->right = second;
@@ -67,6 +77,10 @@ void Encoder::buildTree(void)
     }
 }
 
+/*
+ * Recursively construct a code table
+ * Adds 0 for left and 1 for right
+*/
 void Encoder::createCodeTable(const Node& node, const std::string &code)
 {
     if (node.character == '\0') {
@@ -77,7 +91,15 @@ void Encoder::createCodeTable(const Node& node, const std::string &code)
     }
 }
 
-void Encoder::writeOutput(void)
+/*
+ * Since you can't write single bits to file, this function packages
+ * them into 8 bit chars
+ * 1. Read a symbol from the input file
+ * 2. Find appropriate code in the code table
+ * 3. Set the bit to 0 or 1
+ * 4. If the package has 8 bits, output it
+*/
+void Encoder::writeCompressedOutput(void)
 {
     resetInputFile();
     readyOutputFile();
@@ -92,11 +114,11 @@ void Encoder::writeOutput(void)
         for (const char& letter : codeStr) {
             if (letter == '0') {
                 code.set(0, 0);
-                packageLength++;
             } else if (letter == '1') {
                 code.set(0, 1);
-                packageLength++;
             }
+            packageLength++;
+
             if (packageLength == 8) {
                 unsigned long packageLong = code.to_ulong();
                 unsigned char package = static_cast<unsigned char>(packageLong);

@@ -19,14 +19,12 @@ private:
     void resetInputFile(void);
     void readyOutputFile(void);
 
-    void findFrequency(void);
-
+    void findSymbolFrequency(void);
     void createNodes(void);
-    void buildTree(void);
+    void buildHuffmanTree(void);
+    void createCodeTable(const Node& node, const std::string& code);
 
-    void createCodeTable(const Node &node, const std::string& code);
-
-    void writeOutput(void);
+    void writeCompressedOutput(void);
 
     std::ifstream inputFile;
     std::ofstream outputFile;
