@@ -24,4 +24,4 @@ Below are some results of running my program on various books*
   
   
   
-*Alls books taken from Project Gutenberg - http://www.gutenberg.org/
+*All books taken from Project Gutenberg - http://www.gutenberg.org/
